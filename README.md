@@ -10,6 +10,8 @@ The design borrows from [Lemmalog](https://github.com/JordyZomer/lemmalog), a Da
 
 ## Install
 
+### Ubuntu / macOS / Linux
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/sang9390/flowstate/main/install.sh | bash
 ```
@@ -19,6 +21,16 @@ With the lemmalog engine (optional — installs rustup ~1.5GB and builds for a f
 ```bash
 curl -fsSL https://raw.githubusercontent.com/sang9390/flowstate/main/install.sh | FLOWSTATE_WITH_ENGINE=1 bash
 ```
+
+### Windows
+
+In PowerShell:
+
+```powershell
+irm https://raw.githubusercontent.com/sang9390/flowstate/main/install.ps1 | iex
+```
+
+The engine setup script is bash-only — on Windows, run `scripts/setup-lemmalog.sh` from Git Bash or WSL.
 
 The skill activates in new `claude` sessions automatically. You can also invoke it directly with `/flowstate`.
 

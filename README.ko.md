@@ -10,6 +10,8 @@ Claude Code용 상태관리 + 지시 파이프라인 스킬.
 
 ## 설치
 
+### Ubuntu / macOS / Linux
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/sang9390/flowstate/main/install.sh | bash
 ```
@@ -19,6 +21,16 @@ lemmalog 엔진까지 함께(선택 — rustup ~1.5GB + 빌드 수 분):
 ```bash
 curl -fsSL https://raw.githubusercontent.com/sang9390/flowstate/main/install.sh | FLOWSTATE_WITH_ENGINE=1 bash
 ```
+
+### Windows
+
+PowerShell에서:
+
+```powershell
+irm https://raw.githubusercontent.com/sang9390/flowstate/main/install.ps1 | iex
+```
+
+엔진 세팅 스크립트는 bash 전용입니다 — Windows에서는 Git Bash 또는 WSL에서 `scripts/setup-lemmalog.sh`를 실행하세요.
 
 설치 후 새 `claude` 세션부터 자동 적용됩니다. `/flowstate`로 직접 호출도 가능합니다.
 
