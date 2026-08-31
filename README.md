@@ -2,7 +2,7 @@
 
 **English** | [한국어](README.ko.md)
 
-A state-management + instruction-pipeline skill for Claude Code.
+A state-management + instruction-pipeline skill for Claude Code — also works on Kimi Code CLI (SKILL.md-compatible).
 
 Every task instruction flows through a 7-stage pipeline (intake → spec → resolution → plan → execute → record → handoff). Facts and decisions learned along the way are recorded in `.flowstate/facts.md`, one fact per line. Refuted facts are never deleted — they are retired (moved to a RETIRED section with a reason and timestamp) — and shorthand instructions like "that function we fixed earlier" are resolved from the fact store and code-structure analysis instead of guessing.
 
@@ -32,7 +32,11 @@ irm https://raw.githubusercontent.com/sang9390/flowstate/main/install.ps1 | iex
 
 The engine setup script is bash-only — on Windows, run `scripts/setup-lemmalog.sh` from Git Bash or WSL.
 
-The skill activates in new `claude` sessions automatically. You can also invoke it directly with `/flowstate`.
+### Kimi Code CLI
+
+Kimi Code reads SKILL.md skills straight from `~/.claude/skills`, so the same install command works — no extra step. The engine setup script registers the lemmalog MCP server on every CLI it finds (`claude` via `claude mcp add`, `kimi` via `kimi mcp add`).
+
+The skill activates in new `claude` (or `kimi`) sessions automatically. You can also invoke it directly with `/flowstate`.
 
 ## Layout
 

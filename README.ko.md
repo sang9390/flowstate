@@ -2,7 +2,7 @@
 
 [English](README.md) | **한국어**
 
-Claude Code용 상태관리 + 지시 파이프라인 스킬.
+Claude Code용 상태관리 + 지시 파이프라인 스킬 — SKILL.md 호환인 Kimi Code CLI에서도 동작합니다.
 
 모든 작업 지시를 7단계 파이프라인(정규화 → spec → 해소 → 계획 → 실행 → 기록 → handoff)으로 처리하고, 프로젝트에서 알게 된 사실과 결정을 `.flowstate/facts.md`에 한 줄 한 사실 형식으로 기록합니다. 반증된 사실은 삭제하지 않고 철회(RETIRED) 처리하며, "아까 그 함수" 같은 축약 지시는 기록과 코드 구조 분석으로 해소합니다.
 
@@ -32,7 +32,11 @@ irm https://raw.githubusercontent.com/sang9390/flowstate/main/install.ps1 | iex
 
 엔진 세팅 스크립트는 bash 전용입니다 — Windows에서는 Git Bash 또는 WSL에서 `scripts/setup-lemmalog.sh`를 실행하세요.
 
-설치 후 새 `claude` 세션부터 자동 적용됩니다. `/flowstate`로 직접 호출도 가능합니다.
+### Kimi Code CLI
+
+Kimi Code는 `~/.claude/skills`의 SKILL.md 스킬을 그대로 읽으므로 동일한 설치 명령이면 충분합니다 — 추가 작업 없음. 엔진 세팅 스크립트는 존재하는 CLI 전부에 lemmalog MCP를 등록합니다(`claude`는 `claude mcp add`, `kimi`는 `kimi mcp add`).
+
+설치 후 새 `claude`(또는 `kimi`) 세션부터 자동 적용됩니다. `/flowstate`로 직접 호출도 가능합니다.
 
 ## 구조
 
