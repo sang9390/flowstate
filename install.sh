@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 # flowstate 스킬 원클릭 설치
 #
-#   curl -fsSL https://raw.githubusercontent.com/GITHUB_USER/flowstate/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/sang9390/flowstate/main/install.sh | bash
 #
 # 엔진(lemmalog)까지 함께 세팅하려면:
-#   curl -fsSL https://raw.githubusercontent.com/GITHUB_USER/flowstate/main/install.sh | FLOWSTATE_WITH_ENGINE=1 bash
+#   curl -fsSL https://raw.githubusercontent.com/sang9390/flowstate/main/install.sh | FLOWSTATE_WITH_ENGINE=1 bash
 #
 # 하는 일: 저장소를 임시 디렉터리에 받아 ~/.claude/skills/flowstate 로 복사.
 # FLOWSTATE_WITH_ENGINE=1 이면 scripts/setup-lemmalog.sh 실행(rustup ~1.5GB + 빌드 + MCP 등록).
 
 set -euo pipefail
 
-REPO_URL="${FLOWSTATE_REPO:-https://github.com/GITHUB_USER/flowstate}"
+REPO_URL="${FLOWSTATE_REPO:-https://github.com/sang9390/flowstate}"
 DEST="$HOME/.claude/skills/flowstate"
 
 log() { printf '[flowstate-install] %s\n' "$*"; }

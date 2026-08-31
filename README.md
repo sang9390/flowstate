@@ -9,13 +9,13 @@ Claude Code용 상태관리 + 지시 파이프라인 스킬.
 ## 설치
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/GITHUB_USER/flowstate/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/sang9390/flowstate/main/install.sh | bash
 ```
 
 lemmalog 엔진까지 함께(선택 — rustup ~1.5GB + 빌드 수 분):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/GITHUB_USER/flowstate/main/install.sh | FLOWSTATE_WITH_ENGINE=1 bash
+curl -fsSL https://raw.githubusercontent.com/sang9390/flowstate/main/install.sh | FLOWSTATE_WITH_ENGINE=1 bash
 ```
 
 설치 후 새 `claude` 세션부터 자동 적용됩니다. `/flowstate`로 직접 호출도 가능합니다.
