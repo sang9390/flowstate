@@ -1,54 +1,56 @@
 # flowstate
 
-Claude Code용 상태관리 + 지시 파이프라인 스킬.
+**English** | [한국어](README.ko.md)
 
-모든 작업 지시를 7단계 파이프라인(정규화 → spec → 해소 → 계획 → 실행 → 기록 → handoff)으로 처리하고, 프로젝트에서 알게 된 사실과 결정을 `.flowstate/facts.md`에 한 줄 한 사실 형식으로 기록합니다. 반증된 사실은 삭제하지 않고 철회(RETIRED) 처리하며, "아까 그 함수" 같은 축약 지시는 기록과 코드 구조 분석으로 해소합니다.
+A state-management + instruction-pipeline skill for Claude Code.
 
-[Lemmalog](https://github.com/JordyZomer/lemmalog) (Datalog 기반 LLM 메모리 엔진)의 설계를 차용했으며, 엔진이 설치되어 있으면 자동으로 위임합니다(증분 무효화, 증명 트리, 충돌 감지). 없으면 파일 모드로 동작합니다.
+Every task instruction flows through a 7-stage pipeline (intake → spec → resolution → plan → execute → record → handoff). Facts and decisions learned along the way are recorded in `.flowstate/facts.md`, one fact per line. Refuted facts are never deleted — they are retired (moved to a RETIRED section with a reason and timestamp) — and shorthand instructions like "that function we fixed earlier" are resolved from the fact store and code-structure analysis instead of guessing.
 
-## 설치
+The design borrows from [Lemmalog](https://github.com/JordyZomer/lemmalog), a Datalog engine for LLM agent memory. When the engine is installed, the skill delegates to it automatically (incremental invalidation, proof trees, conflict detection). Without it, the skill runs in pure file mode.
+
+## Install
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/sang9390/flowstate/main/install.sh | bash
 ```
 
-lemmalog 엔진까지 함께(선택 — rustup ~1.5GB + 빌드 수 분):
+With the lemmalog engine (optional — installs rustup ~1.5GB and builds for a few minutes):
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/sang9390/flowstate/main/install.sh | FLOWSTATE_WITH_ENGINE=1 bash
 ```
 
-설치 후 새 `claude` 세션부터 자동 적용됩니다. `/flowstate`로 직접 호출도 가능합니다.
+The skill activates in new `claude` sessions automatically. You can also invoke it directly with `/flowstate`.
 
-## 구조
+## Layout
 
 ```
 flowstate/
-├── SKILL.md                      # 7단계 파이프라인 본체
+├── SKILL.md                      # 7-stage pipeline body
 ├── references/
-│   ├── fact-protocol.md          # 사실 기록 형식·철회 규칙
-│   └── handoff-template.md       # 세션 인수인계 양식
+│   ├── fact-protocol.md          # fact line format + retraction rules
+│   └── handoff-template.md       # session handoff template
 └── scripts/
-    └── setup-lemmalog.sh         # 엔진 원클릭 세팅 (멱등)
+    └── setup-lemmalog.sh         # one-shot engine setup (idempotent)
 ```
 
-## 파일 모드 vs 엔진 모드
+## File mode vs engine mode
 
-| | 파일 모드 (기본) | 엔진 모드 (lemmalog) |
+| | File mode (default) | Engine mode (lemmalog) |
 |---|---|---|
-| 요구사항 | 없음 | Rust 툴체인 (스크립트가 자동 설치) |
-| 사실 저장 | `.flowstate/facts.md` | facts.md + `.flowstate/lemmalog.snapshot` (프로젝트별 분리) |
-| 추가 기능 | — | 자동 충돌 감지, 증명 트리(why), 대규모 사실 µs 쿼리 |
+| Requirements | none | Rust toolchain (installed by the script) |
+| Fact storage | `.flowstate/facts.md` | facts.md + `.flowstate/lemmalog.snapshot` (isolated per project) |
+| Extras | — | automatic conflict detection, proof trees (why), µs queries over large fact sets |
 
-벤치마크(7개 시나리오 + 12세션 대형 시나리오, LLM 채점) 기준: 스킬 없는 기본 Claude Code 62/70 대비 flowstate 70/70. 파일/엔진 모드는 12세션 규모까지 동점 — 일상 사용은 파일 모드로 충분하고, 사실 수천 건 이상의 장기·대규모 프로젝트에서 엔진이 유효합니다.
+Benchmark results (7 scenarios plus a 12-session long-horizon scenario, LLM-judged): plain Claude Code without the skill scored 62/70; flowstate scored 70/70. File and engine modes tied up to the 12-session scale — file mode is enough for everyday work, and the engine pays off on long-running projects with thousands of facts.
 
-## 동작 요약
+## How it works
 
-- **모든 지시가 동일 파이프라인 통과** — 명확한 지시는 통과 비용 ~0, 모호하면 해소 단계만 깊게 동작 (fact 기록 조회 → 파일시스템·코드 구조 분석 → 그래도 안 되면 질문)
-- **적응형 게이트** — 파괴적·비가역 작업, 범위 확장 시에만 정지·확인
-- **철회 규율** — 결정 변경 시 이전 사실을 RETIRED로 이동(사유·시각 기록), 파생 사실 연쇄 철회, 전제(premised_on) 추적
-- **환경변수** — `FLOWSTATE_NO_SETUP=1`: 엔진 자동 세팅 건너뜀
+- **Every instruction goes through the same pipeline** — clear instructions pass through at near-zero cost; vague ones get a deeper resolution stage (fact-store lookup → filesystem/code analysis → ask the user only as a last resort)
+- **Adaptive gate** — stops for confirmation only on destructive/irreversible actions or scope expansion
+- **Retraction discipline** — when a decision changes, the old fact moves to RETIRED (with reason and timestamp), derived facts are retracted in cascade, and premises are tracked via `premised_on`
+- **Environment variable** — `FLOWSTATE_NO_SETUP=1` skips the automatic engine setup
 
-## 라이선스
+## License
 
-MIT. Lemmalog 역시 MIT (JordyZomer/lemmalog).
+MIT. Lemmalog is also MIT (JordyZomer/lemmalog).
